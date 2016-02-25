@@ -14,7 +14,10 @@ $plugins->add_hook('postbit', 'limit_intro_main');
 $plugins->add_hook('parse_quoted_message', 'limit_intro_quote');
 $plugins->add_hook('printthread_post', 'limit_intro_print');
 $plugins->add_hook('reputation_start', 'limit_intro_reputation');
-
+$plugins->add_hook('search_results_start', 'limit_intro_reputation');
+$plugins->add_hook('search_do_search_process', 'limit_intro_reputation');
+$plugins->add_hook('search_thread_start', 'limit_intro_reputation');
+$plugins->add_hook('search_start', 'limit_intro_reputation');
 
 function limit_intro_info()
 {
@@ -35,7 +38,7 @@ function limit_intro_reputation()
 {
 	global $mybb;
 	if($mybb->user['usergroup'] == $mybb->settings['limit_intro_groupid']) {
-		error("You do not have permission to access this page. This is for the following reason:<ol></br><li>Your account is in a restricted usergroup.</li></ol></br>You are currently logged in with the username: 'admin' ");
+		error("You do not have permission to access this page. This is for the following reason:<ol></br><li>Your account is in a restricted usergroup.</li></ol></br>You are currently logged in with the username: '".$mybb->user['username']."' ");
 	}
 }
 
@@ -56,7 +59,7 @@ function limit_intro_print()
 	global $forum, $mybb;
 	if($forum['fid'] == $mybb->settings['limit_intro_forumid']) {
 		if($mybb->user['usergroup'] == $mybb->settings['limit_intro_groupid']) {
-			error("You do not have permission to access this page. This is for the following reason:<ol></br><li>Your account is in a restricted usergroup.</li></ol></br>You are currently logged in with the username: 'admin' ");
+			error("You do not have permission to access this page. This is for the following reason:<ol></br><li>Your account is in a restricted usergroup.</li></ol></br>You are currently logged in with the username: '".$mybb->user['username']."' ");
 		}
 	}
 }
@@ -68,7 +71,7 @@ function limit_intro_main(&$post)
 	global $mybb;
 	if($post['fid'] == $mybb->settings['limit_intro_forumid']) {
 		if($mybb->user['usergroup'] == $mybb->settings['limit_intro_groupid']) {
-			if($post['username'] != $mybb->user['username']) {
+			if($post['username'] !== $mybb->user['username']) {
 				if($post['usergroup'] == 4) {
 					$title = "siph0n Administrator";
 					$username = "[siph0n_administrator]";
